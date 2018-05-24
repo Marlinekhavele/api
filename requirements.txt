@@ -7,4 +7,5 @@ djangorestframework==3.8.2
 Markdown==2.6.11
 phonenumbers==8.9.6
 phonenumberslite==8.9.6
+gunicorn==19.7.1
 pytz==2018.4
