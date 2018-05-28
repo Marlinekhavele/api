@@ -8,6 +8,7 @@ from rest_framework.compat import authenticate
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from rest_framework.urls import login
+from rest_framework.reverse import reverse
 
 from .models import People
 from .serializers import LoginSerializer
@@ -19,7 +20,50 @@ from rest_framework import status
 
 from rest_framework.authtoken.models import Token
 
+
+class APIRootView(APIView):
+    def get(self, request, format=None):
+        return Response({
+            'login':reverse("login",request=request,format=format),
+            'create':reverse("register",request=request,format=format),
+
+        })
+        # create =
+        # data = {
+            
+        #     'createview-url': reverse('create-view', args=[create], request=request)
+        #     'loginview-url': reverse('login-view', args=[login], request=request)
+            
+        # }
+        # return Response(data)
+        
+
 class CreateView(APIView):
+    """
+    Description:\n A signup view\n
+    Request type:\n POST \n
+    Sample Post: \n{
+        	"username":"laura",
+	        "first_name":"laura",
+	        "last_name":"pedro",
+	        "email":"pedrola@gmail.com",
+	        "password":"laura1999"
+    }\n
+    
+    \nResponse success status:HTTP_201_created\n
+
+    sample success:\n{
+    "username": "laura",
+    "token": "e06167b4a73d2eb3d9541586d88b546df217ffba",
+    "email": "pedrola@gmail.com"
+}\n
+
+\nResponse Failure:\n{
+
+ \nerror: bad request:	HTTP_400_BAD REQUEST\n
+
+}\n
+    """
     def post(self,request,*args,**kwargs):
         username=request.data["username"]
         first_name=request.data["first_name"]
@@ -74,49 +118,55 @@ class CreateView(APIView):
 #             return Response(serializer.data, status=status.HTTP_201_CREATED)
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
-
-
 class LoginView(APIView):
- # def post(self, request, *args, **kwargs):
- #     username = request.data["username"]
- #     password = request.data["password"]
- #
- #
- #
- #     data = {
- #         "username": username,
- #         "password": password,
- #     }
+    """
+    Description:\n A login view\n
+    Request type:\n POST \n
+    Sample Post: \n{
+        	"username":"laura",
+	        "password":"laura1999"
+    }\n
+    
+    \nResponse success status:HTTP_200_OK\n
 
- def post(self, request, format=None):
-         data = request.data
+    sample success:\n{
+    "username": "laura",
+    "token": "e06167b4a73d2eb3d9541586d88b546df217ffba",
+   
+ }\n
 
-         username = data.get('username', None)
-         password = data.get('password', None)
+ \nResponse Failure:\n{
 
-         user = authenticate(username=username, password=password)
+ \nerror: Not found:	HTTP_404_NOT_FOUND\n
 
-         if user is not None:
-             if user.is_active:
-                 print(user)
-                 print(user.id)
+  }\n
+"""
+    
+    def post(self, request, format=None):
+        data = request.data
+        username = data.get('username', None)
+        password = data.get('password', None)
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            if user.is_active:
+                print(user)
+                print(user.id)
                  # login(request, user)
-                 token = Token.objects.get(user_id=user.id)
-                 print(token)
+                token = Token.objects.get(user_id=user.id)
+                print(token)
 
-                 success_user_response = {
-                     "username":user.username,
-                     "token":token.key
+                success_user_response = {
+                    "username":user.username,
+                    "token":token.key
 
                  }
-                 return Response(success_user_response ,status=status.HTTP_200_OK)
-             else:
-                 return Response(status=status.HTTP_404_NOT_FOUND)
-         else:
-             return Response(status=status.HTTP_404_NOT_FOUND)
+                return Response(success_user_response ,status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 
