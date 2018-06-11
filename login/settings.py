@@ -37,12 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #app name
     'signup',
+    'student',
+
+    #external apps
     'rest_framework',
     'phonenumber_field',
     'rest_framework.authtoken',
     'corsheaders',
-    'student',
+    'widget_tweaks',
+   
 ]
 
 MIDDLEWARE = [

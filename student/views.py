@@ -13,12 +13,27 @@ from .serializers import (
     
 
      )
+from .forms import UserLoginForm
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 
+
+
+
+
+def login_view(request):
+    form = UserLoginForm()
+    if request.method == 'POST':
+        form =  UserLoginForm(request.POST)
+    if form.is_valid():
+        username = form.cleaned_data.get("username")
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        
+    return render(request,"form.html",{"form":form})
 
 class UserRegisterAPIView(APIView):
     """

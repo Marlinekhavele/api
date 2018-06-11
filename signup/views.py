@@ -151,9 +151,9 @@ class LoginView(APIView):
 
         if user is not None:
             if user.is_active:
-                print(user)
+                # print(user)
                 print(user.id)
-                 # login(request, user)
+                login(request, user)
                 token = Token.objects.get(user_id=user.id)
                 print(token)
 
@@ -166,6 +166,9 @@ class LoginView(APIView):
             else:
                 return Response(status=status.HTTP_404_NOT_FOUND)
         else:
+            error_message={
+                "error":""
+            }
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
