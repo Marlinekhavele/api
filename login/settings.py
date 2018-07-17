@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     #app name
     'signup',
     'student',
+    'teachers',
 
     #external apps
     'rest_framework',

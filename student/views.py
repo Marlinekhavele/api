@@ -13,27 +13,82 @@ from .serializers import (
     
 
      )
-from .forms import UserLoginForm
+# from .forms import UserLoginForm
+from .forms import (
+    Student_Signup,
+    Student_Login
+)
+# from .forms import Student_Login
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
+from django.contrib.auth import(
+    authenticate,
+    login
+)
 
 
 
 
+def  StudentSignup(request):
+    """
+    This is a signup form
+    """
+    form = Student_Signup(request.POST or None)
+    context={'form':form}
+    template_name ='signup.html'
 
-def login_view(request):
-    form = UserLoginForm()
-    if request.method == 'POST':
-        form =  UserLoginForm(request.POST)
+    return render(request,template_name,context)
+
+
+
+def StudentLogin(request):
+    """
+    Description: This is a login form
+    """
+    form = Student_Login(request.POST or None)
     if form.is_valid():
         username = form.cleaned_data.get("username")
-        email = form.cleaned_data.get("email")
         password = form.cleaned_data.get("password")
+        user = authenticate(username=username,password=password)
+        login(request,user)
+
+    context = {'form':form}
+    template_name = 'index.html'
+    return render(request,template_name,context)
+
+
+
+# def student_post(request):
+#     form =  StudentForm()
+#     if request.method == 'POST':
+
+    
+#         if form.is_valid():
+#             user = form.cleaned_data.get("user")
+#             phone_number = form.cleaned_data.get("phone_number")
+#             country = form.cleaned_data.get("country")
+#             county = form.cleaned_data.get("county")
+#             school = form.cleaned_data.get("school")
+#     return render(request,"form.html",{"form":form})
+
         
-    return render(request,"form.html",{"form":form})
+            
+ 
+   
+
+# def login_view(request):
+#     form = UserLoginForm()
+#     if request.method == 'POST':
+#         form =  UserLoginForm(request.POST)
+#     if form.is_valid():
+#         username = form.cleaned_data.get("username")
+#         email = form.cleaned_data.get("email")
+#         password = form.cleaned_data.get("password")
+        
+#     return render(request,"form.html",{"form":form})
 
 class UserRegisterAPIView(APIView):
     """
