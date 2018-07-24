@@ -28,14 +28,7 @@ class APIRootView(APIView):
             'create':reverse("register",request=request,format=format),
 
         })
-        # create =
-        # data = {
-            
-        #     'createview-url': reverse('create-view', args=[create], request=request)
-        #     'loginview-url': reverse('login-view', args=[login], request=request)
-            
-        # }
-        # return Response(data)
+        
         
 
 class CreateView(APIView):

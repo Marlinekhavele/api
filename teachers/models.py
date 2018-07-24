@@ -5,6 +5,14 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 
+
+TEACHER_CHOICES = (
+    ("TEACHER", "teacher"),
+    ("HEADTEACHER", "headteacher"),
+    ("COUNTYOFFICER", "countyofficer")
+    
+)
+
 class Country(models.Model):
     name =models.CharField(max_length=60) 
     created_on = models.DateTimeField(auto_now_add=True)
@@ -33,8 +41,8 @@ class School(models.Model):
 
 class Teacher(models.Model):
     user =models.OneToOneField(User) 
-    is_teacher = models.BooleanField('teacher status', default=False)
-    role = models.CharField(max_length=60)
+    is_teacher = models.BooleanField('teacher status', default=True)
+    role = models.CharField(max_length=60,choices=TEACHER_CHOICES)
     school = models.ForeignKey(School, null=True, blank=True)
     county = models.ForeignKey(County, null=True, blank=True)
     def __str__(self):
@@ -45,8 +53,8 @@ class Teacher(models.Model):
 
 class HeadTeacher(models.Model):
     user = models.OneToOneField(User)
-    is_headteacher = models.BooleanField('headteacher status', default=False)
-    role = models.CharField(max_length=20)
+    is_headteacher = models.BooleanField('headteacher status', default=True)
+    role = models.CharField(max_length=60,choices=TEACHER_CHOICES)
     county = models.ForeignKey(County, null=True, blank=True)
     school = models.ForeignKey(School, null=True, blank=True)
     def __str__(self):
@@ -54,8 +62,8 @@ class HeadTeacher(models.Model):
 
 class CountyOfficer(models.Model):
     user = models.OneToOneField(User)
-    is_countyofficer = models.BooleanField('countyofficer status', default=False)
-    role = models.CharField(max_length=20)
+    is_countyofficer = models.BooleanField('countyofficer status', default=True)
+    role = models.CharField(max_length=60,choices=TEACHER_CHOICES)
     county = models.ForeignKey(County, null=True, blank=True)
     school = models.ForeignKey(School, null=True, blank=True)
     def __str__(self):

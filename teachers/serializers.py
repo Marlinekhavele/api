@@ -13,7 +13,8 @@ from rest_framework.serializers import(
 from .models import (
     Teacher,
     HeadTeacher,
-    CountyOfficer
+    CountyOfficer,
+    TEACHER_CHOICES
     )
 
 
@@ -85,6 +86,9 @@ class TeacherSignupSerializer(serializers.ModelSerializer):
     """
     serializer responsible during a teacher registration
     """
+    TEACHER_CHOICES = ("teacher","headteacher","countyofficer")
+
+    role = serializers.ChoiceField(choices=TEACHER_CHOICES)
     class Meta:
         model = Teacher
         fields = (
@@ -95,7 +99,7 @@ class TeacherSignupSerializer(serializers.ModelSerializer):
             'school'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
         )
         write_only_fields = ('password',)
-        read_only_fields=('is_staff','is_superuser','is_active')
+        read_only_fields=('is_staff','is_superuser','is_active','is_teacher')
        
         def create(self,validated_data):
             new_created_teacher = Teacher(
@@ -107,40 +111,40 @@ class TeacherSignupSerializer(serializers.ModelSerializer):
 
             )
             
-            new_created_teacher.set_password(validated_data['password'])
+            # new_created_teacher.set_password(validated_data['password'])
             new_created_teacher.save()
             return new_created_teacher
 
 
-class TeacherLoginSerializer(serializers.ModelSerializer):
-    """
-    serializer responsible during a teacher login
-    """
-    class Meta:
-        model = Teacher
-        fields =(
-            'user',
-            'is_teacher',
-            'role',
-            'county',
-            'school'
-        )
+# class TeacherLoginSerializer(serializers.ModelSerializer):
+#     """
+#     serializer responsible during a teacher login
+#     """
+#     class Meta:
+#         model = Teacher
+#         fields =(
+#             'user',
+#             'is_teacher',
+#             'role',
+#             'county',
+#             'school'
+#         )
  
-        write_only_fields = ('password',)
-        read_only_fields=('is_staff','is_superuser','is_active')
-        def validate(self,data):
-           teacher_obj = None
-           user=data["user"],
-           username = data.get["username",None],
-           password = data["password"],
-           is_teacher =data["is_teacher"],
-           role = data["role"],
-           county = data["county"],
-           school =data["school"]
+#         write_only_fields = ('password',)
+#         read_only_fields=('is_staff','is_superuser','is_active')
+#         def validate(self,data):
+#            teacher_obj = None
+#            user=data["user"],
+#            username = data.get["username",None],
+#            password = data["password"],
+#            is_teacher =data["is_teacher"],
+#            role = data["role"],
+#            county = data["county"],
+#            school =data["school"]
 
-           teacher_obj.set_password(data['password'])
-           teacher_obj.save()
-           return teacher_obj
+#            teacher_obj.set_password(data['password'])
+#            teacher_obj.save()
+#            return teacher_obj
 
 
 
@@ -149,6 +153,11 @@ class HeadTeacherSignupSerializer(serializers.ModelSerializer):
     """
     serializer responsible during a Headteacher registration
     """
+    TEACHER_CHOICES = ("teacher","headteacher","countyofficer")
+
+    role = serializers.ChoiceField(choices=TEACHER_CHOICES)
+
+
     class Meta:
         model = HeadTeacher
         fields = (
@@ -162,7 +171,7 @@ class HeadTeacherSignupSerializer(serializers.ModelSerializer):
 
         )
         write_only_fields = ('password',)
-        read_only_fields=('is_staff','is_superuser','is_active')
+        read_only_fields=('is_staff','is_superuser','is_active','is_headteacher')
        
         def create(self,validated_data):
             new_created_headteacher = HeadTeacher(
@@ -181,12 +190,16 @@ class HeadTeacherSignupSerializer(serializers.ModelSerializer):
 class CountyOfficerSignupSerializer(serializers.ModelSerializer):
     """
     serializer responsible during a Headteacher registration
+
+   
     """
+    TEACHER_CHOICES = ("teacher","headteacher","countyofficer")
+    role = serializers.ChoiceField(choices=TEACHER_CHOICES)
     class Meta:
         model = CountyOfficer
         fields = (
             'user',
-            'is_CountyOfficer',
+            'is_countyofficer',
             'role',
             'county',
             'school'
