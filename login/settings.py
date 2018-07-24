@@ -37,11 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #app name
+    
     'signup',
     'student',
     'teachers',
-    #external apps
+   
     'rest_framework',
     'phonenumber_field',
     'rest_framework.authtoken',
