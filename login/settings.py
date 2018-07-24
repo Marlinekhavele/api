@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'signup',
     'student',
     'teachers',
-
     #external apps
     'rest_framework',
     'phonenumber_field',
