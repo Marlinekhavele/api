@@ -2,8 +2,8 @@ from django.conf.urls import url
 
 
 from .views import(
-   TeacherLoginAPIView,
-   TeacherRegisterAPIView,
+    DashboardLoginView,
+    TeacherRegisterAPIView,
     UserRegisterAPIView,
     HeadTeacherRegisterAPIView,
     CountyOfficerRegisterAPIView,
@@ -13,7 +13,7 @@ from .views import(
 )
 urlpatterns = [
  url(r'^user/$', UserRegisterAPIView.as_view(),name='user'),
- url(r'^login/$', TeacherLoginAPIView.as_view(),name='login'),
+ url(r'^login/$', DashboardLoginView.as_view(),name='login'),
  url(r'^register/$', TeacherRegisterAPIView.as_view(),name='register'),
  url(r'^detail/$', HeadTeacherRegisterAPIView.as_view(),name='detail'),
  url(r'^create/$', CountyOfficerRegisterAPIView.as_view(),name='create'),

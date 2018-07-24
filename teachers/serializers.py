@@ -116,36 +116,6 @@ class TeacherSignupSerializer(serializers.ModelSerializer):
             return new_created_teacher
 
 
-# class TeacherLoginSerializer(serializers.ModelSerializer):
-#     """
-#     serializer responsible during a teacher login
-#     """
-#     class Meta:
-#         model = Teacher
-#         fields =(
-#             'user',
-#             'is_teacher',
-#             'role',
-#             'county',
-#             'school'
-#         )
- 
-#         write_only_fields = ('password',)
-#         read_only_fields=('is_staff','is_superuser','is_active')
-#         def validate(self,data):
-#            teacher_obj = None
-#            user=data["user"],
-#            username = data.get["username",None],
-#            password = data["password"],
-#            is_teacher =data["is_teacher"],
-#            role = data["role"],
-#            county = data["county"],
-#            school =data["school"]
-
-#            teacher_obj.set_password(data['password'])
-#            teacher_obj.save()
-#            return teacher_obj
-
 
 
 

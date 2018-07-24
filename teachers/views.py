@@ -3,10 +3,13 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.reverse import reverse
 
 from .models import (
     Teacher,
+    HeadTeacher,
+    CountyOfficer,
     User
     )
 
@@ -57,6 +60,7 @@ class APIRootView(APIView):
             'register':reverse("register",request=request,format=format),
             'detail':reverse("detail",request=request,format=format),
             'create':reverse("create",request=request,format=format),
+            'login':reverse("login",request=request,format=format),
 
         })
 
@@ -90,7 +94,7 @@ class UserRegisterAPIView(APIView):
             user.save()
             print(user.id)
            
-            # token = Token.objects.get(user=user)
+            token = Token.objects.get(user=user)
 
             success_response = {
                 "username":user.username,
@@ -546,3 +550,97 @@ Allow: POST
             return Response(teacher_create_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
         return Response(usercreate_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class DashboardLoginView(APIView):
+    """
+    { \n
+    
+    "username": "marlinek",
+    "school": 1,
+    "county": 1,
+    "token": "73a8ac6d849d4af2cf001d07d42f83c80d4c2ce9",
+    "role": "teacher",
+    "user": 8
+
+}
+
+    "error": "Username is invalid"
+    
+
+HTTP 401 Unauthorized
+
+HTTP 200 OK
+
+    """
+
+
+    def post(self, request, format=None):
+        username = request.data['username']
+        password = request.data['password']
+        role = request.data['role']
+        county=request.data["county"]
+        school=request.data["school"]
+
+        if User.objects.filter(username=username).exists() == False:
+            error = {
+                'error': 'Username is invalid'
+            }
+
+            return Response(error, status=status.HTTP_401_UNAUTHORIZED)
+
+        user = User.objects.get(username=username)
+
+        if role == Teacher:
+
+            if Teacher.objects.filter(user_id=user.id).exists() == False:
+                error = {
+                    'error': 'You are not a teacher'
+                }
+
+                return Response(error, status=status.HTTP_404_NOT_FOUND)
+
+        elif role == HeadTeacher:
+
+            if HeadTeacher.objects.filter(user_id=user.id).exists() == False:
+                error = {
+                    'error': 'You are not a headteacher'
+                }
+
+                return Response(error, status=status.HTTP_404_NOT_FOUND)
+        elif role == CountyOfficer:
+
+            if CountyOfficer.objects.filter(user_id=user.id).exists() == False:
+                error = {
+                    'error': 'You are not a country officer'
+                }
+
+                return Response(error, status=status.HTTP_404_NOT_FOUND)
+        # else:
+        #     error = {
+        #         'error': 'You did not select your access level'
+        #     }
+
+            return Response(error, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        # everything is okay now, login
+        auth_user = authenticate(username=username, password=password)
+
+        if auth_user:
+            token = Token.objects.get(user_id=user.id)
+
+            data = {
+                    "user":user.id,
+                    "username":user.username,
+                    "role":role,
+                    "county":county,
+                    "school":school,
+                    "token": token.key
+            }
+
+            return Response(data, status=status.HTTP_200_OK)
+
+        error = {
+            'error': 'Your password is wrong'
+        }
+
+        return Response(error, status=status.HTTP_400_BAD_REQUEST)
